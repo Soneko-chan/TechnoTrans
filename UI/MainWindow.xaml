@@ -21,14 +21,13 @@
             <!-- Заголовок -->
             <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left">
                 <TextBlock Text="Автосервис 'АвтоТранс'" FontSize="20" FontWeight="Bold"/>
-                <TextBlock Text=" - Учет заявок на ремонт" FontSize="20" Margin="10,0,0,0"/>
+                <TextBlock Text=" - Учет заявок" FontSize="20" Margin="10,0,0,0"/>
             </StackPanel>
 
             <!-- Кнопки управления -->
             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button Content="Добавить заявку" Click="AddRequest_Click" Margin="5" Width="120"/>
                 <Button Content="Редактировать" Click="EditRequest_Click" Margin="5" Width="120"/>
-                <Button Content="Обновить" Click="Refresh_Click" Margin="5" Width="80"/>
             </StackPanel>
         </Grid>
 
@@ -42,7 +41,7 @@
                 <DataGridTextColumn Header="Модель" Binding="{Binding CarModel}" Width="100"/>
                 <DataGridTextColumn Header="Клиент" Binding="{Binding ClientName}" Width="120"/>
                 <DataGridTextColumn Header="Телефон" Binding="{Binding PhoneNumber}" Width="100"/>
-                <DataGridTextColumn Header="Статус" Binding="{Binding Status}" Width="120"/>
+                <DataGridTextColumn Header="Статус" Binding="{Binding StatusDisplay}" Width="120"/>
                 <DataGridTextColumn Header="Механик" Binding="{Binding ResponsibleMechanic}" Width="120"/>
             </DataGrid.Columns>
         </DataGrid>

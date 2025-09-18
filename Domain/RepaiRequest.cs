@@ -14,10 +14,13 @@
         public string Comments { get; set; }
         public string SpareParts { get; set; }
 
+        // TODO Перенести это в UI слой
+        public string StatusDisplay => Status.ToPrettyString();
+
         public RepairRequest()
         {
             CreationDate = DateTime.Now;
-            Status = "Новая заявка";
+            Status = RepairRequestType.New;
         }
 
         public RepairRequest(string carType, string carModel, string problemDescription,
@@ -29,7 +32,7 @@
             ProblemDescription = problemDescription;
             ClientName = clientName;
             PhoneNumber = phoneNumber;
-            Status = "Новая заявка";
+            Status = RepairRequestType.New;
         }
     }
 }

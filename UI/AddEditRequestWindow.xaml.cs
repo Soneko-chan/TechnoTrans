@@ -1,7 +1,8 @@
 ﻿using Domain;
 using System.Text.RegularExpressions;
 using System.Windows;
-using System.Windows.Controls;
+using UI.Helpers;
+using System.Linq;
 
 namespace UI
 {
@@ -14,7 +15,7 @@ namespace UI
         {
             InitializeComponent();
             NewRequest = new RepairRequest();
-            statusComboBox.SelectedIndex = 0;
+            InitializeStatusComboBox();
             Title = "Добавление новой заявки";
         }
 
@@ -22,9 +23,20 @@ namespace UI
         {
             InitializeComponent();
             NewRequest = requestToEdit;
-            isEditMode = true;
+            
+            InitializeStatusComboBox();
             Title = "Редактирование заявки №" + requestToEdit.Id;
             LoadRequestData();
+        }
+
+        private void InitializeStatusComboBox()
+        {
+            statusComboBox.ItemsSource = System.Enum.GetValues<RepairRequestType>()
+                .Select(requestType => new RepairRequestTypeComboBoxItem {
+                    Value = requestType,
+                    Text = requestType.ToPrettyString(),
+                });
+            statusComboBox.SelectedIndex = 0;
         }
 
         private void LoadRequestData()
@@ -34,20 +46,8 @@ namespace UI
             clientNameTextBox.Text = NewRequest.ClientName;
             phoneTextBox.Text = NewRequest.PhoneNumber;
             problemTextBox.Text = NewRequest.ProblemDescription;
-
-            // Установка статуса
-            switch (NewRequest.Status)
-            {
-                case "Новая заявка": statusComboBox.SelectedIndex = 0; break;
-                case "В процессе ремонта": statusComboBox.SelectedIndex = 1; break;
-                case "Ожидание запчастей": statusComboBox.SelectedIndex = 2; break;
-                case "Завершена": statusComboBox.SelectedIndex = 3; break;
-                default: statusComboBox.SelectedIndex = 0; break;
-            }
-
+            statusComboBox.SelectedItem = NewRequest.Status;
             mechanicTextBox.Text = NewRequest.ResponsibleMechanic;
-            commentsTextBox.Text = NewRequest.Comments;
-            sparePartsTextBox.Text = NewRequest.SpareParts;
         }
 
         private bool ValidateInput()
@@ -84,7 +84,6 @@ namespace UI
                 return false;
             }
 
-            // Простая валидация телефона
             if (!Regex.IsMatch(phoneTextBox.Text, @"^[\d\s\-\+\(\)]+$"))
             {
                 MessageBox.Show("Некорректный номер телефона", "Ошибка",
@@ -111,15 +110,8 @@ namespace UI
             NewRequest.ClientName = clientNameTextBox.Text.Trim();
             NewRequest.PhoneNumber = phoneTextBox.Text.Trim();
             NewRequest.ProblemDescription = problemTextBox.Text.Trim();
-
-            if (statusComboBox.SelectedItem is ComboBoxItem selectedStatus)
-            {
-                NewRequest.Status = selectedStatus.Content.ToString();
-            }
-
+            NewRequest.Status = ((RepairRequestTypeComboBoxItem)statusComboBox.SelectedItem).Value;
             NewRequest.ResponsibleMechanic = mechanicTextBox.Text.Trim();
-            NewRequest.Comments = commentsTextBox.Text.Trim();
-            NewRequest.SpareParts = sparePartsTextBox.Text.Trim();
         }
 
         private void Save_Click(object sender, RoutedEventArgs e)

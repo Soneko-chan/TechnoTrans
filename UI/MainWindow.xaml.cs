@@ -14,32 +14,17 @@ namespace UI
         public MainWindow()
         {
             InitializeComponent();
-            LoadSampleData();
             RefreshDataGrid();
         }
 
-        private void LoadSampleData()
-        {
-            // Тестовые данные
-            requests.Add(new RepairRequest("Toyota", "Camry", "Замена масла", "Иванов Иван", "+79991234567")
-            {
-                Id = 1,
-                Status = "В процессе ремонта",
-                ResponsibleMechanic = "Петров А.С."
-            });
-
-            requests.Add(new RepairRequest("Honda", "Civic", "Ремонт тормозов", "Сидоров Петр", "+79997654321")
-            {
-                Id = 2,
-                Status = "Ожидание запчастей"
-            });
-        }
+       
 
         private void RefreshDataGrid()
         {
             requestsGrid.ItemsSource = null;
             requestsGrid.ItemsSource = requests;
             totalRequestsText.Text = requests.Count.ToString();
+            statusText.Text = "Данные обновлены";
         }
 
         private void AddRequest_Click(object sender, RoutedEventArgs e)
@@ -51,7 +36,6 @@ namespace UI
                 newRequest.Id = requests.Count > 0 ? requests[^1].Id + 1 : 1;
                 requests.Add(newRequest);
                 RefreshDataGrid();
-                statusText.Text = "Заявка добавлена успешно";
             }
         }
 
@@ -68,14 +52,7 @@ namespace UI
             if (editWindow.ShowDialog() == true)
             {
                 RefreshDataGrid();
-                statusText.Text = "Заявка обновлена успешно";
             }
-        }
-
-        private void Refresh_Click(object sender, RoutedEventArgs e)
-        {
-            RefreshDataGrid();
-            statusText.Text = "Данные обновлены";
         }
 
         private void RequestsGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
