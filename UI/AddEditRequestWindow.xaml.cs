@@ -46,7 +46,12 @@ namespace UI
             clientNameTextBox.Text = NewRequest.ClientName;
             phoneTextBox.Text = NewRequest.PhoneNumber;
             problemTextBox.Text = NewRequest.ProblemDescription;
-            statusComboBox.SelectedItem = NewRequest.Status;
+
+            
+            var selectedItem = statusComboBox.Items.Cast<RepairRequestTypeComboBoxItem>()
+                .FirstOrDefault(item => item.Value == NewRequest.Status);
+            statusComboBox.SelectedItem = selectedItem ?? statusComboBox.Items[0];
+
             mechanicTextBox.Text = NewRequest.ResponsibleMechanic;
         }
 
