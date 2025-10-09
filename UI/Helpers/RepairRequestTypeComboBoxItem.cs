@@ -9,7 +9,7 @@ namespace UI.Helpers
 {
     internal class RepairRequestTypeComboBoxItem
     {
-        public required RepairRequestType Value { get; init; }
+        public required RepairRequestStatus Value { get; init; }
         public required string Text { get; init; }
     }
 }

@@ -9,18 +9,16 @@
         public string ProblemDescription { get; set; }
         public string ClientName { get; set; }
         public string PhoneNumber { get; set; }
-        public RepairRequestType Status { get; set; }
+        public RepairRequestStatus Status { get; set; }
         public string ResponsibleMechanic { get; set; }
         public string Comments { get; set; }
         public string SpareParts { get; set; }
 
-        // TODO Перенести это в UI слой
-        public string StatusDisplay => Status.ToPrettyString();
 
         public RepairRequest()
         {
             CreationDate = DateTime.Now;
-            Status = RepairRequestType.New;
+            Status = RepairRequestStatus.New;
         }
 
         public RepairRequest(string carType, string carModel, string problemDescription,
@@ -32,7 +30,7 @@
             ProblemDescription = problemDescription;
             ClientName = clientName;
             PhoneNumber = phoneNumber;
-            Status = RepairRequestType.New;
+            Status = RepairRequestStatus.New;
         }
     }
 }

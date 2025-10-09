@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain
 {
-    public enum RepairRequestType
+    public enum RepairRequestStatus
     {
         New,
         InProgress,
@@ -14,19 +14,19 @@ namespace Domain
         Done,
     }
 
-    public static class RepairRequestTypeExtensions
+    public static class RepairRequestStatusExtensions
     {
-        public static string ToPrettyString(this RepairRequestType type)
+        public static string ToPrettyString(this RepairRequestStatus type)
         {
             switch (type)
             {
-                case RepairRequestType.New:
+                case RepairRequestStatus.New:
                     return "Новая заявка";
-                case RepairRequestType.InProgress:
+                case RepairRequestStatus.InProgress:
                     return "В процессе ремонта";
-                case RepairRequestType.WaitingPairs:
+                case RepairRequestStatus.WaitingPairs:
                     return "Ожидание запчастей";
-                case RepairRequestType.Done:
+                case RepairRequestStatus.Done:
                     return "Заявка завершена";
                 default:
                     return "Новая заявка";

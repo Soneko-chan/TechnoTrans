@@ -8,13 +8,21 @@ namespace UI
 {
     public partial class AddEditRequestWindow : Window
     {
-        public RepairRequest NewRequest { get; private set; }
+        public RepairRequest Request { get; private set; }
         private bool isEditMode = false;
+
+        private RepairRequestTypeComboBoxItem[] _statuses = System.Enum.GetValues<RepairRequestStatus>()
+                .Select(requestType => new RepairRequestTypeComboBoxItem
+                {
+                    Value = requestType,
+                    Text = requestType.ToPrettyString(),
+                })
+                .ToArray();
 
         public AddEditRequestWindow()
         {
             InitializeComponent();
-            NewRequest = new RepairRequest();
+            Request = new RepairRequest();
             InitializeStatusComboBox();
             Title = "Добавление новой заявки";
         }
@@ -22,7 +30,7 @@ namespace UI
         public AddEditRequestWindow(RepairRequest requestToEdit)
         {
             InitializeComponent();
-            NewRequest = requestToEdit;
+            Request = requestToEdit;
             
             InitializeStatusComboBox();
             Title = "Редактирование заявки №" + requestToEdit.Id;
@@ -31,28 +39,23 @@ namespace UI
 
         private void InitializeStatusComboBox()
         {
-            statusComboBox.ItemsSource = System.Enum.GetValues<RepairRequestType>()
-                .Select(requestType => new RepairRequestTypeComboBoxItem {
-                    Value = requestType,
-                    Text = requestType.ToPrettyString(),
-                });
+            statusComboBox.ItemsSource = _statuses;
             statusComboBox.SelectedIndex = 0;
         }
 
         private void LoadRequestData()
         {
-            carTypeTextBox.Text = NewRequest.CarType;
-            carModelTextBox.Text = NewRequest.CarModel;
-            clientNameTextBox.Text = NewRequest.ClientName;
-            phoneTextBox.Text = NewRequest.PhoneNumber;
-            problemTextBox.Text = NewRequest.ProblemDescription;
+            carTypeTextBox.Text = Request.CarType;
+            carModelTextBox.Text = Request.CarModel;
+            clientNameTextBox.Text = Request.ClientName;
+            phoneTextBox.Text = Request.PhoneNumber;
+            problemTextBox.Text = Request.ProblemDescription;
 
             
-            var selectedItem = statusComboBox.Items.Cast<RepairRequestTypeComboBoxItem>()
-                .FirstOrDefault(item => item.Value == NewRequest.Status);
+            var selectedItem = _statuses.FirstOrDefault(item => item.Value == Request.Status);
             statusComboBox.SelectedItem = selectedItem ?? statusComboBox.Items[0];
 
-            mechanicTextBox.Text = NewRequest.ResponsibleMechanic;
+            mechanicTextBox.Text = Request.ResponsibleMechanic;
         }
 
         private bool ValidateInput()
@@ -110,13 +113,13 @@ namespace UI
 
         private void SaveDataToRequest()
         {
-            NewRequest.CarType = carTypeTextBox.Text.Trim();
-            NewRequest.CarModel = carModelTextBox.Text.Trim();
-            NewRequest.ClientName = clientNameTextBox.Text.Trim();
-            NewRequest.PhoneNumber = phoneTextBox.Text.Trim();
-            NewRequest.ProblemDescription = problemTextBox.Text.Trim();
-            NewRequest.Status = ((RepairRequestTypeComboBoxItem)statusComboBox.SelectedItem).Value;
-            NewRequest.ResponsibleMechanic = mechanicTextBox.Text.Trim();
+            Request.CarType = carTypeTextBox.Text.Trim();
+            Request.CarModel = carModelTextBox.Text.Trim();
+            Request.ClientName = clientNameTextBox.Text.Trim();
+            Request.PhoneNumber = phoneTextBox.Text.Trim();
+            Request.ProblemDescription = problemTextBox.Text.Trim();
+            Request.Status = ((RepairRequestTypeComboBoxItem)statusComboBox.SelectedItem).Value;
+            Request.ResponsibleMechanic = mechanicTextBox.Text.Trim();
         }
 
         private void Save_Click(object sender, RoutedEventArgs e)

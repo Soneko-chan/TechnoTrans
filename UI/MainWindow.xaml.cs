@@ -10,6 +10,7 @@ namespace UI
     {
         private readonly IRepairRequestRepository _requestRepository;
         private RepairRequest _selectedRequest;
+        private IEnumerable<RepairRequest> _allreqs;
 
         public MainWindow()
         {
@@ -20,9 +21,9 @@ namespace UI
 
         private void RefreshDataGrid()
         {
-            requestsGrid.ItemsSource = null;
-            requestsGrid.ItemsSource = _requestRepository.GetAll();
-            totalRequestsText.Text = _requestRepository.GetAll().Count.ToString();
+            _allreqs = _requestRepository.GetAll();
+            requestsGrid.ItemsSource = _allreqs;
+            totalRequestsText.Text = _allreqs.Count().ToString();
             statusText.Text = "Данные обновлены";
         }
 
@@ -31,7 +32,7 @@ namespace UI
             var addWindow = new AddEditRequestWindow();
             if (addWindow.ShowDialog() == true)
             {
-                var newRequest = addWindow.NewRequest;
+                var newRequest = addWindow.Request;
                 _requestRepository.Add(newRequest);
                 RefreshDataGrid();
             }
@@ -49,7 +50,7 @@ namespace UI
             var editWindow = new AddEditRequestWindow(_selectedRequest);
             if (editWindow.ShowDialog() == true)
             {
-                _requestRepository.Update(editWindow.NewRequest);
+                _requestRepository.Update(editWindow.Request);
                 RefreshDataGrid();
             }
         }
