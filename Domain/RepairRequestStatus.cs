@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Domain
+﻿namespace Domain
 {
     public enum RepairRequestStatus
     {
@@ -18,19 +12,14 @@ namespace Domain
     {
         public static string ToPrettyString(this RepairRequestStatus type)
         {
-            switch (type)
+            return type switch
             {
-                case RepairRequestStatus.New:
-                    return "Новая заявка";
-                case RepairRequestStatus.InProgress:
-                    return "В процессе ремонта";
-                case RepairRequestStatus.WaitingPairs:
-                    return "Ожидание запчастей";
-                case RepairRequestStatus.Done:
-                    return "Заявка завершена";
-                default:
-                    return "Новая заявка";
-            }
+                RepairRequestStatus.New => "Новая заявка",
+                RepairRequestStatus.InProgress => "В процессе ремонта",
+                RepairRequestStatus.WaitingPairs => "Ожидание запчастей",
+                RepairRequestStatus.Done => "Заявка завершена",
+                _ => "Новая заявка",
+            };
         }
     }
 }

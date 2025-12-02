@@ -4,16 +4,17 @@
     {
         public int Id { get; set; }
         public DateTime CreationDate { get; set; }
-        public string CarType { get; set; }
-        public string CarModel { get; set; }
-        public string ProblemDescription { get; set; }
-        public string ClientName { get; set; }
-        public string PhoneNumber { get; set; }
+        public string CarType { get; set; } = string.Empty;
+        public string CarModel { get; set; } = string.Empty;
+        public string ProblemDescription { get; set; } = string.Empty;
+        public string ClientName { get; set; } = string.Empty;
+        public string PhoneNumber { get; set; } = string.Empty;
         public RepairRequestStatus Status { get; set; }
-        public string ResponsibleMechanic { get; set; }
-        public string Comments { get; set; }
-        public string SpareParts { get; set; }
 
+        // Сделайте эти поля nullable
+        public string? ResponsibleMechanic { get; set; }
+        public string? Comments { get; set; }
+        public string? SpareParts { get; set; }
 
         public RepairRequest()
         {
@@ -21,16 +22,21 @@
             Status = RepairRequestStatus.New;
         }
 
-        public RepairRequest(string carType, string carModel, string problemDescription,
-                           string clientName, string phoneNumber)
+       
+
+        public void CopyFrom(RepairRequest other)
         {
-            CreationDate = DateTime.Now;
-            CarType = carType;
-            CarModel = carModel;
-            ProblemDescription = problemDescription;
-            ClientName = clientName;
-            PhoneNumber = phoneNumber;
-            Status = RepairRequestStatus.New;
+            // Id НЕ копируем!
+            this.CreationDate = other.CreationDate;
+            this.CarType = other.CarType;
+            this.CarModel = other.CarModel;
+            this.ProblemDescription = other.ProblemDescription;
+            this.ClientName = other.ClientName;
+            this.PhoneNumber = other.PhoneNumber;
+            this.Status = other.Status;
+            this.ResponsibleMechanic = other.ResponsibleMechanic;
+            this.Comments = other.Comments;
+            this.SpareParts = other.SpareParts;
         }
     }
 }

@@ -113,6 +113,9 @@ namespace UI
 
         private void SaveDataToRequest()
         {
+            // В режиме редактирования НЕ создаем новый объект,
+            // а обновляем существующий
+
             Request.CarType = carTypeTextBox.Text.Trim();
             Request.CarModel = carModelTextBox.Text.Trim();
             Request.ClientName = clientNameTextBox.Text.Trim();
@@ -120,6 +123,8 @@ namespace UI
             Request.ProblemDescription = problemTextBox.Text.Trim();
             Request.Status = ((RepairRequestTypeComboBoxItem)statusComboBox.SelectedItem).Value;
             Request.ResponsibleMechanic = mechanicTextBox.Text.Trim();
+
+            // ID уже есть в Request, его менять не нужно!
         }
 
         private void Save_Click(object sender, RoutedEventArgs e)

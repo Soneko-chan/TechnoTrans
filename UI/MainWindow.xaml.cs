@@ -1,8 +1,12 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Linq;
+using System.Collections.Generic;
 using Domain;
 using Data.Interfaces;
-using Data.InMemory;
+using Services;
+using Microsoft.EntityFrameworkCore; // ДОБАВИТЬ ЭТУ СТРОЧКУ
+using Data.SqlServer; 
 
 namespace UI
 {
@@ -12,16 +16,30 @@ namespace UI
         private RepairRequest _selectedRequest;
         private IEnumerable<RepairRequest> _allreqs;
 
+        
         public MainWindow()
         {
             InitializeComponent();
-            _requestRepository = new RepairRequestRepository();
+            // Создаем репозиторий для дизайнера
+            var optionsBuilder = new DbContextOptionsBuilder<TechnoTransDbContext>();
+            optionsBuilder.UseSqlServer("Server=.\\SQLEXPRESS;Database=TechnoTransDb;Trusted_Connection=True;TrustServerCertificate=True;");
+            var context = new TechnoTransDbContext(optionsBuilder.Options);
+            _requestRepository = new RepairRequestRepository(context);
+
+            RefreshDataGrid();
+        }
+
+        // Конструктор с DI (для реального использования)
+        public MainWindow(IRepairRequestRepository requestRepository) : this()
+        {
+            _requestRepository = requestRepository;
             RefreshDataGrid();
         }
 
         private void RefreshDataGrid()
         {
-            _allreqs = _requestRepository.GetAll();
+            // ИСПРАВЛЯЕМ: передаем пустой фильтр
+            _allreqs = _requestRepository.GetAll(new RepairRequestFilter());
             requestsGrid.ItemsSource = _allreqs;
             totalRequestsText.Text = _allreqs.Count().ToString();
             statusText.Text = "Данные обновлены";
@@ -47,9 +65,15 @@ namespace UI
                 return;
             }
 
+            
+
             var editWindow = new AddEditRequestWindow(_selectedRequest);
             if (editWindow.ShowDialog() == true)
             {
+                
+                MessageBox.Show($"Editing ID: {editWindow.Request.Id}, Type: {editWindow.Request.Id.GetType().Name}",
+                    "Отладка", MessageBoxButton.OK, MessageBoxImage.Information);
+
                 _requestRepository.Update(editWindow.Request);
                 RefreshDataGrid();
             }
@@ -78,7 +102,34 @@ namespace UI
 
         private void RequestsGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            _selectedRequest = requestsGrid.SelectedItem as RepairRequest;
+            // ВАЖНО: добавить проверку типа
+            if (requestsGrid.SelectedItem is RepairRequest request)
+            {
+                // Отладка
+                Console.WriteLine($"Selected Id: {request.Id}, Type: {request.Id.GetType()}");
+                _selectedRequest = request;
+            }
+            else
+            {
+                _selectedRequest = null;
+            }
+        }
+
+
+        private void StatisticsButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var statisticsService = new StatisticsService(_requestRepository);
+                var statisticsWindow = new StatisticsWindow(statisticsService);
+                statisticsWindow.Owner = this;
+                statisticsWindow.ShowDialog();
+            }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show($"Ошибка при открытии статистики: {ex.Message}", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }

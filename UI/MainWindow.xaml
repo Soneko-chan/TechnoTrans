@@ -5,12 +5,12 @@
         Title="Автосервис 'АвтоТранс' - Учет заявок" 
         Height="600" Width="900"
         WindowStartupLocation="CenterScreen">
-    
+
     <Window.Resources>
         <converters:StatusConverter x:Key="StatusConverter"/>
         <converters:NameConverter x:Key="NameConverter"/>
     </Window.Resources>
-    
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -27,25 +27,25 @@
 
             <!-- Заголовок -->
             <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left">
-                <TextBlock Text="Автосервис 'АвтоТранс'" FontSize="20" FontWeight="Bold"/>
-                <TextBlock Text=" - Учет заявок" FontSize="20" Margin="10,0,0,0"/>
+                <TextBlock Text="Автосервис 'TechnoTrans'" FontSize="20" FontWeight="Bold"/>
+                <TextBlock Text="-Учет заявок" FontSize="20" Margin="10,0,0,0"/>
             </StackPanel>
 
             <!-- Кнопки управления -->
-            
             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Content="Добавить заявку" Click="AddRequest_Click" Margin="5" Width="120"/>
-                <Button Content="Редактировать" Click="EditRequest_Click" Margin="5" Width="120"/>
-                <Button Content="Удалить" Click="DeleteRequest_Click" Margin="5" Width="120"/>
+                <Button Content="Добавить заявку" Click="AddRequest_Click" Margin="5" Width="100"/>
+                <Button Content="Редактировать" Click="EditRequest_Click" Margin="5" Width="100"/>
+                <Button Content="Удалить" Click="DeleteRequest_Click" Margin="5" Width="100"/>
+                <!-- ДОБАВЛЯЕМ КНОПКУ СТАТИСТИКИ -->
+                <Button Content="Статистика" Click="StatisticsButton_Click" Margin="5" Width="120" Background="#FF4CAF50" Foreground="White"/>
             </StackPanel>
-
         </Grid>
 
         <!-- Список заявок -->
         <DataGrid x:Name="requestsGrid" Grid.Row="1" Margin="10" AutoGenerateColumns="False"
                  SelectionMode="Single" IsReadOnly="True" SelectionChanged="RequestsGrid_SelectionChanged">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="№" Binding="{Binding Id}" Width="50"/>
+                <DataGridTextColumn Header="№" Binding="{Binding Id, StringFormat={}{0:D}}" Width="50"/>
                 <DataGridTextColumn Header="Дата" Binding="{Binding CreationDate, StringFormat=dd.MM.yyyy}" Width="90"/>
                 <DataGridTextColumn Header="Марка авто" Binding="{Binding CarType}" Width="100"/>
                 <DataGridTextColumn Header="Модель" Binding="{Binding CarModel}" Width="100"/>

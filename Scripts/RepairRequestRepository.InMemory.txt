@@ -1,0 +1,106 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Data.Interfaces;
+using Domain;
+
+namespace Data.InMemory
+{
+    public class RepairRequestRepository : IRepairRequestRepository
+    {
+        private readonly List<RepairRequest> _repairRequests;
+
+        public RepairRequestRepository()
+        {
+            _repairRequests = new List<RepairRequest>();
+            SeedData();
+        }
+
+        public List<RepairRequest> GetAll(RepairRequestFilter filter)
+        {
+            var result = _repairRequests.AsEnumerable();
+
+            if (filter.StartDate.HasValue)
+                result = result.Where(r => r.CreationDate >= filter.StartDate.Value);
+
+            if (filter.EndDate.HasValue)
+                result = result.Where(r => r.CreationDate <= filter.EndDate.Value);
+
+            if (filter.Status.HasValue)
+                result = result.Where(r => r.Status == filter.Status.Value);
+
+            if (!string.IsNullOrEmpty(filter.MechanicName))
+                result = result.Where(r => r.ResponsibleMechanic == filter.MechanicName);
+
+            return result.ToList();
+        }
+
+        public RepairRequest GetById(int id)
+        {
+            return _repairRequests.FirstOrDefault(r => r.Id == id);
+        }
+
+        public void Add(RepairRequest request)
+        {
+            request.Id = _repairRequests.Count > 0 ? _repairRequests.Max(r => r.Id) + 1 : 1;
+            _repairRequests.Add(request);
+        }
+
+        public void Update(RepairRequest request)
+        {
+            var existing = GetById(request.Id);
+            if (existing != null)
+            {
+                _repairRequests.Remove(existing);
+                _repairRequests.Add(request);
+            }
+        }
+
+        public void Delete(int id)
+        {
+            var request = GetById(id);
+            if (request != null)
+                _repairRequests.Remove(request);
+        }
+
+        // НОВЫЙ МЕТОД ДЛЯ ГЕНЕРАЦИИ СЛУЧАЙНЫХ ИМЕН
+        private string GetRandomClientName(Random random)
+        {
+            var lastNames = new[] { "Иванов", "Петров", "Сидоров", "Козлов", "Васильев", "Смирнов", "Попов", "Новиков" };
+            var firstNames = new[] { "Иван", "Петр", "Алексей", "Сергей", "Дмитрий", "Мария", "Анна", "Елена", "Ольга" };
+            var middleNames = new[] { "Иванович", "Петрович", "Алексеевич", "Сергеевич", "Дмитриевич", "Ивановна", "Петровна", "Алексеевна" };
+
+            return $"{lastNames[random.Next(lastNames.Length)]} {firstNames[random.Next(firstNames.Length)]} {middleNames[random.Next(middleNames.Length)]}";
+        }
+
+        private void SeedData()
+        {
+            var mechanics = new[] { "Иван Петров", "Сергей Сидоров", "Анна Козлова", "Дмитрий Волков", "" };
+            var carTypes = new[] { "Седан", "Хэтчбек", "Внедорожник", "Универсал", "Купе" };
+            var carModels = new[] { "Toyota Camry", "BMW X5", "Honda Civic", "Audi A4", "Mercedes C-class" };
+
+            var random = new Random();
+
+            for (int i = 0; i < 50; i++)
+            {
+                var request = new RepairRequest(
+                    carType: carTypes[random.Next(carTypes.Length)],
+                    carModel: carModels[random.Next(carModels.Length)],
+                    problemDescription: $"Проблема {i + 1}",
+                    clientName: GetRandomClientName(random),  // ИСПОЛЬЗУЕМ НОВЫЙ МЕТОД
+                    phoneNumber: $"+7{random.Next(900, 999)}{random.Next(1000000, 9999999)}"
+                )
+                {
+                    Id = i + 1,
+                    CreationDate = DateTime.Now.AddDays(-random.Next(0, 180)),
+                    Status = (RepairRequestStatus)random.Next(0, 4),
+                    ResponsibleMechanic = mechanics[random.Next(mechanics.Length)],
+                    Comments = $"Комментарий к заявке {i + 1}",
+                    SpareParts = random.Next(0, 2) == 1 ? "Требуются запчасти" : ""
+                };
+
+                _repairRequests.Add(request);
+            }
+        }
+    }
+}

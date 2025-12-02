@@ -1,14 +1,14 @@
-﻿using Domain;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Domain;
 
 namespace Data.Interfaces
 {
     public interface IRepairRequestRepository
     {
-        int Add(RepairRequest request);
-        RepairRequest GetById(int id);
-        List<RepairRequest> GetAll();
-        bool Update(RepairRequest request);
-        bool Delete(int id);
+        void Add(RepairRequest entity);
+        RepairRequest? GetById(int id);
+        List<RepairRequest> GetAll(RepairRequestFilter filter);
+        void Update(RepairRequest entity);
+        void Delete(int id);
     }
 }
