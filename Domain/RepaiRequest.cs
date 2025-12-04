@@ -11,7 +11,7 @@
         public string PhoneNumber { get; set; } = string.Empty;
         public RepairRequestStatus Status { get; set; }
 
-        // Сделайте эти поля nullable
+        
         public string? ResponsibleMechanic { get; set; }
         public string? Comments { get; set; }
         public string? SpareParts { get; set; }
@@ -26,7 +26,7 @@
 
         public void CopyFrom(RepairRequest other)
         {
-            // Id НЕ копируем!
+            
             this.CreationDate = other.CreationDate;
             this.CarType = other.CarType;
             this.CarModel = other.CarModel;

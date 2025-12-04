@@ -1,5 +1,6 @@
 @echo off
-cd /d "D:\C# Labaratoryes\TechnoTrans"
+chcp 65001
+cd /d "%~dp0"
 
 echo ====================================
 echo Удаление кэшей и временных файлов

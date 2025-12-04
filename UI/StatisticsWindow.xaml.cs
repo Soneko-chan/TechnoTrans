@@ -30,7 +30,7 @@ namespace UI
             LoadStatusChart(filter);
             LoadMechanicChart(filter);
             LoadMonthChart(filter);
-            LoadCarTypeChart(filter); // ДОБАВЛЯЕМ ЗАГРУЗКУ СТАТИСТИКИ ПО ТИПАМ АВТО
+            LoadCarTypeChart(filter); 
         }
 
         private RepairRequestFilter CreateFilter()
@@ -100,7 +100,7 @@ namespace UI
             MonthPlotView.Model = plotModel;
         }
 
-        // НОВЫЙ МЕТОД ДЛЯ СТАТИСТИКИ ПО ТИПАМ АВТОМОБИЛЕЙ
+        
         private void LoadCarTypeChart(RepairRequestFilter filter)
         {
             var data = _statisticsService.GetByCarType(filter);
@@ -108,7 +108,7 @@ namespace UI
 
             var barSeries = new BarSeries
             {
-                FillColor = OxyColor.FromRgb(76, 175, 80) // Зеленый цвет
+                FillColor = OxyColor.FromRgb(76, 175, 80) 
             };
 
             var categoryAxis = new CategoryAxis { Position = AxisPosition.Left, Title = "Типы автомобилей" };

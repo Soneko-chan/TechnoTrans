@@ -17,28 +17,19 @@ namespace UI
         private IEnumerable<RepairRequest> _allreqs;
 
         
-        public MainWindow()
+        public MainWindow(IRepairRequestRepository _repairRequestRepository)
         {
             InitializeComponent();
-            // Создаем репозиторий для дизайнера
-            var optionsBuilder = new DbContextOptionsBuilder<TechnoTransDbContext>();
-            optionsBuilder.UseSqlServer("Server=.\\SQLEXPRESS;Database=TechnoTransDb;Trusted_Connection=True;TrustServerCertificate=True;");
-            var context = new TechnoTransDbContext(optionsBuilder.Options);
-            _requestRepository = new RepairRequestRepository(context);
 
+            _requestRepository = _repairRequestRepository;
             RefreshDataGrid();
         }
 
-        // Конструктор с DI (для реального использования)
-        public MainWindow(IRepairRequestRepository requestRepository) : this()
-        {
-            _requestRepository = requestRepository;
-            RefreshDataGrid();
-        }
+        
 
         private void RefreshDataGrid()
         {
-            // ИСПРАВЛЯЕМ: передаем пустой фильтр
+            
             _allreqs = _requestRepository.GetAll(new RepairRequestFilter());
             requestsGrid.ItemsSource = _allreqs;
             totalRequestsText.Text = _allreqs.Count().ToString();
@@ -102,11 +93,9 @@ namespace UI
 
         private void RequestsGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // ВАЖНО: добавить проверку типа
+            
             if (requestsGrid.SelectedItem is RepairRequest request)
             {
-                // Отладка
-                Console.WriteLine($"Selected Id: {request.Id}, Type: {request.Id.GetType()}");
                 _selectedRequest = request;
             }
             else
